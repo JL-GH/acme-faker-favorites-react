@@ -12,6 +12,11 @@
   </div>
 </body>
   <script type='text/babel'>
+    const counterUpdate = () => {
+      if (this.state.userList.style.backgroundColor === 'tomato') {
+        this.state.counter++
+      }
+    }
 
     const CreateUsers = () => {
       let arrOfUsers = []
@@ -21,22 +26,27 @@
         arrOfUsers.push(user)
       }
 
-      return (
-        arrOfUsers.map(user =>
-          <div
-            id = {user.name}
-            style = {{listStyleType:'none', margin:'1rem'}}
-            key = {user.name}
-            onClick = { (ev) => {
-
-              }
-            }
-          >
-            <div>{user.name}</div>
-            <div>{user.email}</div>
-          </div>
-        )
-      )
+      return arrOfUsers
+      // .map(user =>
+      //     <div
+      //       id = {user.name}
+      //       style = {{listStyleType:'none', margin:'1rem'}}
+      //       key = {user.name}
+      //       onClick = {(ev) => {
+      //         if (ev.target.parentNode.style.backgroundColor === '') {
+      //           ev.target.parentNode.style.backgroundColor = 'tomato'
+      //           this.state.counter ++
+      //         }
+      //         else {
+      //           ev.target.parentNode.style.backgroundColor = ''
+      //           this.state.counter --
+      //         }
+      //       }}
+      //     >
+      //       <div>{user.name}</div>
+      //       <div>{user.email}</div>
+      //     </div>
+      // )
     }
     const root = document.querySelector('#root')
 // React.createElement('div', {name: johnson}, 'hello', props.name,)
@@ -45,16 +55,53 @@
       constructor(props) {
         super(props)
         this.state = {
-          userList: <CreateUsers />
+          userList: CreateUsers().map(user =>
+            <div
+              id = {user.name}
+              style = {{listStyleType:'none', margin:'1rem'}}
+              key = {user.name}
+              onClick = {this.clickChanger}
+              // (ev) => {
+              //   if (ev.target.parentNode.style.backgroundColor === '') {
+              //     ev.target.parentNode.style.backgroundColor = 'tomato'
+              //     this.state.counter ++
+              //   }
+              //   else {
+              //     ev.target.parentNode.style.backgroundColor = ''
+              //     this.state.counter --
+              //   }
+              // }
+            >
+              <div>{user.name}</div>
+              <div>{user.email}</div>
+            </div>
+          ),
+          counter: 0
         }
+        this.clickChanger = this.clickChanger.bind(this);
       }
 
+      clickChanger(ev) {
+          if (ev.target.parentNode.style.backgroundColor === '') {
+                ev.target.parentNode.style.backgroundColor = 'tomato'
+                this.setState({counter: this.state.counter +1})
+              }
+              else {
+                ev.target.parentNode.style.backgroundColor = ''
+                this.setState({counter: this.state.counter -1})
+              }
+        }
 
       render() {
         return (
           <div id='masterContainer'>
             <h1>Acme Faker Favorites</h1>
-            <h3>{`You have X favorite users!`}</h3>
+            <h3>
+              {
+                //why can I not add a function in here?
+                `You have ${this.state.counter} favorite users!`
+              }
+            </h3>
             <div id='listOfUsers'>
               {
                 this.state.userList
