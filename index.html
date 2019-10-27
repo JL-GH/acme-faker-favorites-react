@@ -12,13 +12,13 @@
   </div>
 </body>
   <script type='text/babel'>
-    const counterUpdate = () => {
-      if (this.state.userList.style.backgroundColor === 'tomato') {
-        this.state.counter++
-      }
-    }
+    const root = document.querySelector('#root')
 
-    const CreateUsers = () => {
+    // const addNewUser = () => {
+    //   this.users.unshift(faker.helpers.createCard())
+    // }
+
+    const createUsers = () => {
       let arrOfUsers = []
 
       for (let i = 0; i <= 9; i++) {
@@ -48,65 +48,63 @@
       //     </div>
       // )
     }
-    const root = document.querySelector('#root')
 // React.createElement('div', {name: johnson}, 'hello', props.name,)
 
     class ListOfPeople extends React.Component{
       constructor(props) {
         super(props)
+        this.users = [...createUsers()]
         this.state = {
-          userList: CreateUsers().map(user =>
-            <div
-              id = {user.name}
-              style = {{listStyleType:'none', margin:'1rem'}}
-              key = {user.name}
-              onClick = {this.clickChanger}
-              // (ev) => {
-              //   if (ev.target.parentNode.style.backgroundColor === '') {
-              //     ev.target.parentNode.style.backgroundColor = 'tomato'
-              //     this.state.counter ++
-              //   }
-              //   else {
-              //     ev.target.parentNode.style.backgroundColor = ''
-              //     this.state.counter --
-              //   }
-              // }
-            >
-              <div>{user.name}</div>
-              <div>{user.email}</div>
-            </div>
-          ),
+          // userList: CreateUsers(),
+          users: this.users,
           counter: 0
         }
-        this.clickChanger = this.clickChanger.bind(this);
+        console.log(this.users)
+        this.clickChanger = this.clickChanger.bind(this)
+        this.addNewUser = this.addNewUser.bind(this)
+      }
+
+      addNewUser() {
+        this.users.unshift(faker.helpers.createCard())
+        console.log(this.users)
       }
 
       clickChanger(ev) {
-          if (ev.target.parentNode.style.backgroundColor === '') {
-                ev.target.parentNode.style.backgroundColor = 'tomato'
-                this.setState({counter: this.state.counter +1})
-              }
-              else {
-                ev.target.parentNode.style.backgroundColor = ''
-                this.setState({counter: this.state.counter -1})
-              }
+        if (ev.target.parentNode.style.backgroundColor === '') {
+          ev.target.parentNode.style.backgroundColor = 'tomato'
+          this.setState({counter: this.state.counter +1})
         }
+        else {
+          ev.target.parentNode.style.backgroundColor = ''
+          this.setState({counter: this.state.counter -1})
+        }
+      }
 
       render() {
         return (
           <div id='masterContainer'>
             <h1>Acme Faker Favorites</h1>
-            <h3>
+            <h3 onClick = {this.addNewUser}>
               {
                 //why can I not add a function in here?
                 `You have ${this.state.counter} favorite users!`
               }
             </h3>
-            <div id='listOfUsers'>
+            <ul id='listOfUsers'>
               {
-                this.state.userList
+                this.users.map(user =>
+                  <li
+                    id = {user.name}
+                    style = {{listStyleType:'none', margin:'1rem'}}
+                    key = {user.name}
+                    onClick = {this.clickChanger}
+                  >
+                    <div>{user.name}</div>
+                    <div>{user.email}</div>
+                  </li>
+                )
               }
-            </div>
+            </ul>
           </div>
         )
       }
